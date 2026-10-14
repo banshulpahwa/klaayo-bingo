@@ -299,7 +299,31 @@
     .chat-message-own .chat-message-bubble { color:#fffcf7; background:#652e42; border-color:#652e42; border-bottom-right-radius:4px; }
     .chat-message-other .chat-message-bubble { border-bottom-left-radius:4px; }
   </style>
-</head>
+<style>/* KLAAYO extras: compact, keyboard-accessible and independent of CDN utility CSS. */
+.store-cta {color:#fffcf7!important;background:#652e42!important;min-height:36px;display:inline-flex;align-items:center;padding:8px 12px!important;}
+.store-cta:hover{background:#4b2031!important}
+.extra-button{border:1px solid #cdbdad;border-radius:12px;padding:10px 14px;background:#fffcf7;color:#652e42;font-size:12px;font-weight:700;cursor:pointer;min-height:40px;}
+.extra-button:hover{background:#eee2dd}.extra-button:focus-visible,.daily-card:focus-visible{outline:3px solid #967947;outline-offset:3px}
+.extra-button:disabled{opacity:.5;cursor:default}.music-toggle{white-space:nowrap;padding:8px;font-size:11px}
+.extras-home{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:stretch;margin:12px 0}
+.daily-card{padding:14px 16px;background:linear-gradient(120deg,#f2e8de,#fffcf7);border:1px solid #d7c4ac;border-radius:18px;text-align:left;color:#652e42;min-width:0}
+.daily-card strong{font:600 24px 'Cormorant Garamond',Georgia,serif;display:flex;justify-content:space-between;gap:10px}
+.daily-card small,.series-picker small{display:block;font-size:11px;color:#716963;line-height:1.5;margin-top:5px}
+.eyebrow{font-size:9px;text-transform:uppercase;letter-spacing:.16em}.enhance-note{font-size:12px;color:#652e42;line-height:1.6;margin:8px 0;overflow-wrap:anywhere}
+.extras-row{display:flex;justify-content:center;align-items:center;gap:8px;flex-wrap:wrap;margin:10px 0}
+.series-picker{text-align:left}.series-picker label{display:block;font-size:12px;color:#652e42;font-weight:700;margin-bottom:7px}
+.series-picker select{width:100%;border:1px solid #ded4c5;background:#fffcf7;color:#292725;padding:10px;border-radius:10px;font-size:13px}
+.call-legend{display:flex;gap:5px;flex-wrap:wrap;justify-content:center;margin:10px 0;font-size:10px}
+.call-legend span{padding:4px 8px;border-radius:20px;max-width:140px;overflow-wrap:anywhere}
+.called-colour>span:first-child{color:var(--call-ink)!important;text-shadow:none!important}
+#modal-victory>div{max-height:85dvh;overflow-y:auto} #modal-victory{bottom:max(12px,env(safe-area-inset-bottom))}
+.victory-extras{text-align:center;margin:8px 0}.progress-dialog{width:min(92vw,480px);max-height:85dvh;overflow:auto;border:1px solid #b09a6c;border-radius:24px;padding:24px;background:#f7f4ee;color:#292725;margin:auto}
+.progress-dialog::backdrop{background:#251b23a6;backdrop-filter:blur(5px)}.progress-dialog h2{font:600 32px Georgia,serif;margin-right:auto}.progress-dialog h3{font:600 20px Georgia,serif;margin:20px 0 12px}
+.progress-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px}.progress-stats div{padding:12px 6px;border:1px solid #ded4c5;border-radius:14px;text-align:center}
+.progress-stats strong{display:block;font:600 24px Georgia,serif;color:#652e42}.progress-stats span{font-size:11px;color:#716963}.progress-badges{display:flex;flex-wrap:wrap;gap:8px}.badge{padding:8px 10px;border:1px solid #ded4c5;border-radius:20px;color:#716963;font-size:12px}.badge.earned{background:#eadfc9;border-color:#967947;color:#59421c}
+@media(max-width:420px){.extras-home{grid-template-columns:1fr}.music-toggle{padding:7px;min-width:40px}.progress-stats{grid-template-columns:repeat(2,1fr)}}
+@media(prefers-reduced-motion:reduce){.scribble-anim,.cell-last-struck{animation:none!important}}
+</style></head>
 <body class="arena-grid-bg min-h-screen flex flex-col justify-between antialiased selection:bg-orange-600 selection:text-[#292725] pb-6">
 
   <!-- Top Header Navigation -->
@@ -380,7 +404,7 @@
             </div>
             <div>
               <div class="font-bingo font-bold text-[#292725] text-base tracking-wide group-hover:text-teal-300">Play with KLAAYO</div>
-              <div class="text-xs text-[#716963]">Choose your pace. Challenge one to three bots.</div>
+              <div class="text-xs text-[#716963]">Choose your pace. Challenge KLAAYO, one on one.</div>
             </div>
           </div>
           <span class="text-teal-400 text-xl font-bold">➔</span>
@@ -764,7 +788,7 @@
           <span aria-hidden="true">↗</span>
           <span class="text-[#716963]">Love playing? Discover handcrafted collections at <strong>klaayo.com</strong></span>
         </div>
-        <a href="https://www.klaayo.com" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1 rounded-lg bg-[#652e42] text-[#292725] font-bold text-[11px] hover:bg-[#865166] transition shrink-0">
+        <a href="https://www.klaayo.com" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1 rounded-lg bg-[#652e42] store-cta font-bold text-[11px] hover:bg-[#865166] transition shrink-0">
           Visit Store ➔
         </a>
       </div>
@@ -1127,7 +1151,7 @@
           if (typeof raw !== 'string' || raw.length > 60000) return null;
           const d = JSON.parse(raw);
           if (d.version !== 1 || d.mode !== 'ai' || ![5,6,7].includes(d.gridSize)) return null;
-          if (!Array.isArray(d.players) || d.players.length < 2 || d.players.length > 4) return null;
+          if (!Array.isArray(d.players) || d.players.length !== 2) return null;
           const total = d.gridSize * d.gridSize;
           const boardValid = b => Array.isArray(b) && b.length === total && new Set(b).size === total && b.every(n=>Number.isInteger(n) && n>=1 && n<=total);
           if (!Array.isArray(d.pickedNumbers) || new Set(d.pickedNumbers).size !== d.pickedNumbers.length || !d.pickedNumbers.every(n=>Number.isInteger(n) && n>=1 && n<=total)) return null;
@@ -1153,7 +1177,7 @@
             const player=players[index];
             pickedByMap[num]={playerIdx:index,name:player.name,color:player.color,isMe:d.mode==='ai' && index===0};
           }
-          return {mode:d.mode,gridSize:d.gridSize,players,playerCount:players.length,aiDifficulty:d.aiDifficulty,currentTurnIndex:d.currentTurnIndex,startingPlayerIndex:d.startingPlayerIndex,pickedNumbers:[...d.pickedNumbers],pickedByMap};
+          return {runId:typeof d.runId==='string'?d.runId.slice(0,80):crypto.randomUUID(),dailyDate:/^\d{4}-\d{2}-\d{2}$/.test(d.dailyDate||'')?d.dailyDate:null,mode:d.mode,gridSize:d.gridSize,players,playerCount:players.length,aiDifficulty:d.aiDifficulty,currentTurnIndex:d.currentTurnIndex,startingPlayerIndex:d.startingPlayerIndex,pickedNumbers:[...d.pickedNumbers],pickedByMap};
         } catch { return null; }
       }
 
@@ -1425,9 +1449,11 @@
         if (targetMode !== 'ai') return;
         if (!this.confirmNewGame()) return;
         this.openConfigModal((playerCount, gridSize, difficulty) => {
+          this.dailyDate=null; this.dailyPractice=false;
           this.aiDifficulty = difficulty;
           this.gridSize = gridSize;
-          this.playerCount = playerCount;
+          this.playerCount = 2;
+          playerCount = 2;
 
           const totalNum = gridSize * gridSize;
           const histTotal = document.getElementById('history-total-count');
@@ -1472,15 +1498,7 @@
           <div class="glass-card w-full max-w-sm rounded-3xl p-5 text-center space-y-4 max-h-[90dvh] overflow-y-auto border border-[#652e42]/70 shadow-2xl">
             <h3 class="font-bingo font-black text-lg text-[#292725]">MATCH CONFIGURATION</h3>
 
-            <!-- Players Selection -->
-            <div class="text-left space-y-1.5">
-              <label class="text-xs font-bold text-[#652e42] uppercase tracking-wider">Players (including you):</label>
-              <div class="flex space-x-2">
-                <button type="button" data-p="2" class="btn-sel-p flex-1 py-2.5 rounded-xl border border-[#652e42] bg-[#eee2dd] text-[#292725] font-bingo font-bold text-sm shadow">2P</button>
-                <button type="button" data-p="3" class="btn-sel-p flex-1 py-2.5 rounded-xl border border-[#ded4c5] bg-[#fffcf7] text-[#716963] font-bingo font-bold text-sm shadow">3P</button>
-                <button type="button" data-p="4" class="btn-sel-p flex-1 py-2.5 rounded-xl border border-[#ded4c5] bg-[#fffcf7] text-[#716963] font-bingo font-bold text-sm shadow">4P</button>
-              </div>
-            </div>
+            <p class="enhance-note">YOU vs KLAAYO · 1 vs 1</p>
 
             <!-- Grid Size Selection -->
             <div class="text-left space-y-1.5 pt-1">
@@ -1528,16 +1546,6 @@
         }
         let selectedP = 2;
         let selectedG = 5;
-
-        overlay.querySelectorAll('.btn-sel-p').forEach(btn => {
-          btn.addEventListener('click', () => {
-            selectedP = parseInt(btn.getAttribute('data-p'));
-            overlay.querySelectorAll('.btn-sel-p').forEach(b => {
-              b.className = 'btn-sel-p flex-1 py-2.5 rounded-xl border border-[#ded4c5] bg-[#fffcf7] text-[#716963] font-bingo font-bold text-sm shadow';
-            });
-            btn.className = 'btn-sel-p flex-1 py-2.5 rounded-xl border border-[#652e42] bg-[#eee2dd] text-[#292725] font-bingo font-bold text-sm shadow';
-          });
-        });
 
         overlay.querySelectorAll('.btn-sel-g').forEach(btn => {
           btn.addEventListener('click', () => {
@@ -1729,7 +1737,9 @@
           INVALID_MESSAGE: 'Use a message of up to 120 characters without angle brackets.',
           NOT_YOUR_TURN: 'It is not your turn yet.', ALREADY_CALLED: 'That number was already called.',
           STALE_MOVE: 'Another move arrived first. Your board is refreshing.',
-          STALE_ROUND: 'A new round has started. Your board is refreshing.'
+          STALE_ROUND: 'A new round has started. Your board is refreshing.',
+          SERIES_COMPLETE: 'This series is complete. Create a new room to play again.',
+          INVALID_SERIES: 'Choose two players for a best-of series.'
         };
         return messages[error?.message] || 'Connection interrupted. Check your internet and try again.';
       }
@@ -1752,13 +1762,18 @@
         try {
           const data = await this.rpcOnline(action, code, {
             name: document.getElementById('input-online-name').value.trim() || 'KlaayoPlayer',
-            gridSize: this.gridSize, maxPlayers: this.playerCount
+            gridSize: this.gridSize, maxPlayers: this.playerCount, seriesBestOf: Number(document.getElementById("series-length").value)
           });
           if (data.status === 'closed') throw new Error('ROOM_CLOSED');
+          if(action==='create' && Number(document.getElementById('series-length').value)>1 && !data.seriesBestOf){
+            await this.rpcOnline('leave',data.roomId,{});
+            throw new Error('SETUP_REQUIRED');
+          }
           this.stopRoomPolling();
           this.currentRoomData = null;
           this.seenMessages = new Set();
           this.finishedRound = null;
+          this.dailyDate=null; this.dailyPractice=false;
           this.mode = 'online';
           this.onlineRoomId = data.roomId;
           this.onlineDisconnected = false;
@@ -1968,7 +1983,7 @@
         this.pickedByMap = {};
         this.lastStruckNumber = null;
         if (this.mode !== 'online') {
-          this.startingPlayerIndex = BingoEngine.chooseStarter(this.players.length, isRematch ? this.startingPlayerIndex : null);
+          this.startingPlayerIndex = this.dailyDate ? 0 : BingoEngine.chooseStarter(this.players.length, isRematch ? this.startingPlayerIndex : null);
           this.currentTurnIndex = this.startingPlayerIndex;
         }
         this.isGameOver = false;
@@ -2075,11 +2090,18 @@
           }
 
           btn.className = cellClasses;
+          if (isStruck && pickInfo) {
+            const ink = this.callInk(pickInfo);
+            btn.style.background = ink.bg; btn.style.borderColor = ink.fg;
+            btn.style.setProperty('--call-ink', ink.fg);
+            btn.classList.add('called-colour');
+            btn.setAttribute('aria-label', `${num}, called by ${pickInfo.isMe ? 'you' : pickInfo.name}`);
+          }
 
           let innerHTML = `<span class="z-10 leading-none drop-shadow ${isStruck ? 'text-[#716963] font-bold' : 'text-[#292725]'}">${num}</span>`;
 
           if (isStruck) {
-            const scribbleColor = pickInfo ? pickInfo.color : '#865166';
+            const scribbleColor = pickInfo ? this.callInk(pickInfo).fg : '#865166';
             innerHTML += this.generateScribbleSVG(scribbleColor);
 
             if (pickInfo) {
@@ -2243,7 +2265,7 @@
         this.botMoveTimer = setTimeout(() => {
           if (version !== this.botMoveVersion || this.isGameOver || this.currentView !== 'game' || this.mode !== 'ai' || this.currentTurnIndex !== turn || this.players[turn] !== currentP) return;
           this.botMoveTimer = null;
-          const move = BingoEngine.pickBestAIMove(currentP.grid, new Set(this.pickedNumbers), this.gridSize, this.aiDifficulty);
+          const move = BingoEngine.pickBestAIMove(currentP.grid, new Set(this.pickedNumbers), this.gridSize, this.aiDifficulty, this.dailyDate ? BingoExtras.rng(this.dailyDate + ':' + this.pickedNumbers.join(',')) : Math.random);
           if (move !== null) this.processStrikeNumber(move, true, turn);
         }, 850);
       }
@@ -2511,7 +2533,7 @@
 
           let inner = `<span class="z-10 leading-none ${isStruck ? 'text-[#716963] font-bold' : 'text-[#292725]'}">${num}</span>`;
           if (isStruck) {
-            const scribbleColor = pickInfo ? pickInfo.color : '#865166';
+            const scribbleColor = pickInfo ? this.callInk(pickInfo).fg : '#865166';
             inner += this.generateScribbleSVG(scribbleColor);
           }
           cell.innerHTML = inner;
@@ -2587,7 +2609,7 @@
         this.pickedNumbers.forEach(n=>{ callers[n] = this.pickedByMap[n]?.playerIdx; });
         try {
           localStorage.setItem('klaayo-bingo-save-v1', JSON.stringify({
-            version:1,mode:this.mode,gridSize:this.gridSize,aiDifficulty:this.aiDifficulty,
+            version:1,runId:this.runId,dailyDate:this.dailyDate||null,mode:this.mode,gridSize:this.gridSize,aiDifficulty:this.aiDifficulty,
             currentTurnIndex:this.currentTurnIndex,startingPlayerIndex:this.startingPlayerIndex,
             players:this.players.map(p=>({grid:p.grid,originalGrid:p.originalGrid,isManualBoard:p.isManualBoard})),
             pickedNumbers:this.pickedNumbers,callers
@@ -2608,6 +2630,7 @@
 
       quickPlay(alreadyConfirmed = false) {
         if (!alreadyConfirmed && !this.confirmNewGame()) return;
+        this.dailyDate=null; this.dailyPractice=false;
         this.mode='ai'; this.gridSize=5; this.playerCount=2; this.aiDifficulty='standard';
         this.myPlayerIndex=0;
         this.players=[['human','You','#865166',false],['bot_1','KlaayoBot','#486e65',true]].map(([id,name,color,isAI])=>{
@@ -2794,8 +2817,206 @@
     chatPanel.querySelector('summary').addEventListener('click', event => {
       if (chatLayout.matches) event.preventDefault();
     });
+    // Local achievements are for fun, not a coupon or a verified leaderboard.
+    const BingoExtras = {
+      key: 'klaayo-bingo-progress-v2',
+      today: () => new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Kolkata',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date()),
+      rng(seed) {
+        let h=2166136261;
+        for(const c of seed) h=Math.imul(h^c.charCodeAt(0),16777619);
+        return () => { h+=0x6D2B79F5; let t=Math.imul(h^(h>>>15),1|h);t^=t+Math.imul(t^(t>>>7),61|t);return ((t^(t>>>14))>>>0)/4294967296; };
+      },
+      board(seed) {
+        const a=Array.from({length:25},(_,i)=>i+1), r=this.rng(seed);
+        for(let i=a.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a;
+      },
+      read() {
+        try { const d=JSON.parse(localStorage.getItem(this.key));
+          if(d?.version===2 && Array.isArray(d.results) && typeof d.daily==='object' && d.daily) return d;
+        }catch{} return {version:2,results:[],daily:{}};
+      },
+      write(d) { try {localStorage.setItem(this.key,JSON.stringify(d)); return true;}catch{return false;} },
+      record(d, result) {
+        if(!result.id || d.results.some(r=>r.id===result.id)) return false;
+        d.results.push(result);
+        // Bounded local history. Never used to issue rewards.
+        if(d.results.length>1500)d.results.splice(0,d.results.length-1500);
+        if(result.daily && d.daily[result.daily])d.daily[result.daily].finished=true;
+        return true;
+      },
+      summary(d) {
+        const r=d.results, wins=r.filter(x=>x.win&&!x.shared), shared=r.filter(x=>x.shared);
+        let streak=0;for(let i=r.length-1;i>=0&&r[i].win&&!r[i].shared;i--)streak++;
+        const fast=wins.filter(x=>x.size===5).map(x=>x.calls);
+        return {played:r.length,wins:wins.length,shared:shared.length,streak,best:fast.length?Math.min(...fast):null,
+          badges:[['First BINGO',wins.length>0],['In good company',r.some(x=>x.online)],['Five wins',wins.length>=5],['Daily ritual',Object.values(d.daily).filter(x=>x.finished).length>=3],['Under twenty',fast.some(n=>n<20)]]};
+      }
+    };
+
+    class AmbientMusic {
+      constructor(button) {
+        this.button=button;this.enabled=false;this.step=0;
+        button.addEventListener('click',()=>this.toggle());
+        document.addEventListener('visibilitychange',()=>{
+          if(!this.ctx)return;
+          if(document.hidden){clearInterval(this.timer);this.ctx.suspend();}
+          else if(this.enabled){this.ctx.resume().then(()=>this.schedule()).catch(()=>this.off());}
+        });
+      }
+      off(){this.enabled=false;clearInterval(this.timer);this.ctx?.suspend();this.button.textContent='♫ Off';this.button.setAttribute('aria-pressed','false');}
+      async toggle(){
+        if(this.enabled){this.off();return;}
+        try {
+          const Audio=window.AudioContext||window.webkitAudioContext;
+          if(!Audio)throw new Error('Unsupported');
+          this.ctx ||= new Audio(); await this.ctx.resume();this.enabled=true;
+          this.button.textContent='♫ On';this.button.setAttribute('aria-pressed','true');this.schedule();
+        }catch{this.off();window.app?.showToast('Music is not available in this browser.');}
+      }
+      schedule(){clearInterval(this.timer);this.note();this.timer=setInterval(()=>this.note(),900);}
+      note(){
+        if(!this.enabled||document.hidden)return;
+        const notes=[261.63,329.63,392,493.88,440,392,329.63,293.66,261.63,392,523.25,493.88,440,329.63,293.66,392];
+        const o=this.ctx.createOscillator(), g=this.ctx.createGain(),t=this.ctx.currentTime;
+        o.type='sine';o.frequency.value=notes[this.step++%notes.length];
+        g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.035,t+.06);g.gain.exponentialRampToValueAtTime(.001,t+1.6);
+        o.connect(g);g.connect(this.ctx.destination);o.start(t);o.stop(t+1.7);o.onended=()=>{o.disconnect();g.disconnect();};
+      }
+    }
+
+    BingoApp.prototype.callInk=function(info){
+      if(info.isMe)return {bg:'#ead8df',fg:'#652e42'};
+      const others=this.players.map((_,i)=>i).filter(i=>i!==this.myPlayerIndex);
+      return [{bg:'#d9e9e2',fg:'#28594b'},{bg:'#e0e5f2',fg:'#3d527d'},{bg:'#f0e4c9',fg:'#735520'}][Math.max(0,others.indexOf(info.playerIdx))%3];
+    };
+    BingoApp.prototype.initExtras=function(){
+      const music=document.createElement('button');music.id='btn-music';music.className='extra-button music-toggle';music.textContent='♫ Off';music.title='Background music';music.setAttribute('aria-label','Background music');music.setAttribute('aria-pressed','false');
+      document.getElementById('btn-sound').before(music);this.ambient=new AmbientMusic(music);
+      const panel=document.createElement('div');panel.className='extras-home';panel.innerHTML=`
+        <button class="daily-card" onclick="app.startDaily()"><span class="eyebrow">A little ritual</span><strong>Today's BINGO <span aria-hidden="true">↗</span></strong><small id="daily-note">One daily challenge · 5 × 5 · Standard</small></button>
+        <button class="extra-button" onclick="app.showProgress()">My Progress <span aria-hidden="true">✧</span></button>`;
+      document.getElementById('resume-card').after(panel);
+      const select=document.createElement('div');select.className='series-picker';select.innerHTML=`<label for="series-length">Match format</label><select id="series-length" onchange="app.changeSeries()"><option value="1">Single round · 2–4 players</option><option value="3">Best of 3 · 2 players</option><option value="5">Best of 5 · 2 players</option></select><small>Series: first to 2 or 3 wins. Shared rounds score no point.</small>`;
+      document.querySelector('[onclick="app.createOnlineRoom()"]').before(select);
+      const invite=document.createElement('div');invite.className='extras-row';invite.innerHTML=`<button class="extra-button" onclick="app.shareInvite()">Share invite ↗</button><button class="extra-button" onclick="app.shareInvite('whatsapp')">WhatsApp</button>`;
+      document.getElementById('lobby-code').parentElement.after(invite);
+      const legend=document.createElement('div');legend.id='call-legend';legend.className='call-legend';document.querySelector('.match-sidebar').append(legend);
+      const ribbon=document.createElement('p');ribbon.id='match-extra-status';ribbon.className='enhance-note';ribbon.setAttribute('aria-live','polite');document.querySelector('.match-sidebar').append(ribbon);
+      const result=document.createElement('div');result.className='victory-extras';result.innerHTML=`<p id="victory-extra-status" class="enhance-note"></p><button class="extra-button" onclick="app.shareResult()">Save / share result ↗</button>`;
+      document.getElementById('btn-rematch').parentElement.before(result);
+      const dialog=document.createElement('dialog');dialog.id='progress-dialog';dialog.className='progress-dialog';dialog.innerHTML=`<div class="extras-row"><h2>My Progress</h2><button class="extra-button" autofocus onclick="document.getElementById('progress-dialog').close()" aria-label="Close progress">✕</button></div><p class="enhance-note">Saved on this browser only. Clearing browser data resets progress. These badges do not award coupons.</p><div id="progress-stats" class="progress-stats"></div><h3>A little collection of wins</h3><div id="progress-badges" class="progress-badges"></div>`;document.body.append(dialog);
+      this.refreshDaily();
+      const room=new URLSearchParams(location.search).get('room');
+      if(room&&/^[A-Z0-9]{6}$/i.test(room)){
+        this.showOnlineSetup();document.getElementById('input-room-code').value=room.toUpperCase();this.setOnlineStatus('You are invited. Enter your name, then tap Join.');
+      }
+    };
+    BingoApp.prototype.changeSeries=function(){
+      if(Number(document.getElementById('series-length').value)>1)this.setOnlineCapacity(2);
+    };
+    const baseCapacity=BingoApp.prototype.setOnlineCapacity;
+    BingoApp.prototype.setOnlineCapacity=function(n){
+      const sel=document.getElementById('series-length');if(n>2&&sel)sel.value='1';return baseCapacity.call(this,n);
+    };
+    BingoApp.prototype.refreshDaily=function(){
+      const el=document.getElementById('daily-note');if(!el)return;
+      const d=BingoExtras.read().daily[BingoExtras.today()];
+      el.textContent=d?(d.finished?'Today completed · Practice again any time':(this.readSavedGame()?.dailyDate===BingoExtras.today()?'Today started · Resume your saved game':'Today attempted · Practice again any time')):'New today · 5 × 5 · Standard · Resets at midnight IST';
+    };
+    BingoApp.prototype.startDaily=function(){
+      const date=BingoExtras.today(),d=BingoExtras.read(),saved=this.readSavedGame();
+      if(saved?.dailyDate===date){this.resumeSavedGame();return;}
+      if(!this.confirmNewGame())return;
+      const counted=!d.daily[date];
+      if(counted){d.daily[date]={finished:false};if(!BingoExtras.write(d)){this.showToast('Daily progress cannot be saved. Please allow browser storage.');return;}}
+      this.dailyDate=date;this.dailyPractice=!counted;
+      this.mode='ai';this.gridSize=5;this.playerCount=2;this.aiDifficulty='standard';this.myPlayerIndex=0;
+      this.players=[['human','You','#865166',false],['bot_1','KlaayoBot','#486e65',true]].map(([id,name,color,isAI],i)=>{
+        const grid=BingoExtras.board(date+':'+i);return {id,name,color,isAI,grid,originalGrid:[...grid],isManualBoard:false,linesCount:0};
+      });
+      this.startBattleArena();this.showToast(counted?"Today's challenge · You call first.":'Practice replay · Does not change daily stats.');
+    };
+    BingoApp.prototype.showProgress=function(){
+      const stats=BingoExtras.summary(BingoExtras.read()), box=document.getElementById('progress-stats');box.textContent='';
+      for(const [label,value] of [['Played',stats.played],['Wins',stats.wins],['Shared wins',stats.shared],['Win streak',stats.streak],['Best 5 × 5',stats.best?stats.best+' calls':'—']]){
+        const c=document.createElement('div'),v=document.createElement('strong'),l=document.createElement('span');v.textContent=value;l.textContent=label;c.append(v,l);box.append(c);
+      }
+      const badges=document.getElementById('progress-badges');badges.textContent='';
+      for(const [name,earned] of stats.badges){const el=document.createElement('span');el.className=earned?'badge earned':'badge';el.textContent=(earned?'✧ ':'○ ')+name;badges.append(el);}
+      document.getElementById('progress-dialog').showModal();
+    };
+    BingoApp.prototype.renderExtras=function(){
+      const legend=document.getElementById('call-legend');if(legend){legend.textContent='';this.players.forEach((p,i)=>{const ink=this.callInk({isMe:i===this.myPlayerIndex,playerIdx:i}),item=document.createElement('span');item.style.background=ink.bg;item.style.color=ink.fg;item.textContent=i===this.myPlayerIndex?'You':p.name;legend.append(item);});}
+      const data=this.mode==='online'?this.currentRoomData:null;
+      let text=this.dailyDate?`Daily · ${this.dailyDate} · ${this.dailyPractice?'Practice replay':'First attempt'}`:'';
+      if(data?.seriesBestOf>1){const scores=data.seriesScores||{};text=`Best of ${data.seriesBestOf} · `+data.players.map(p=>`${p.name}: ${scores[p.id]||0}`).join(' / ');
+        if(data.seriesWinnerId)text+=' · Series winner: '+(data.players.find(p=>p.id===data.seriesWinnerId)?.name||'Winner');}
+      for(const id of ['match-extra-status','victory-extra-status']){const el=document.getElementById(id);if(el)el.textContent=text;}
+      const rematch=document.getElementById('btn-rematch');
+      if(data?.seriesWinnerId){rematch.disabled=true;rematch.textContent='Series complete';}
+      else if(data?.seriesBestOf>1){rematch.textContent=this.isOnlineHost?'Next round':'Waiting for host';}
+      const lobby=document.getElementById('lobby-grid-badge');if(data?.seriesBestOf>1&&lobby)lobby.textContent+=lobby.textContent.includes('Best of')?'':` · Best of ${data.seriesBestOf}`;
+    };
+    BingoApp.prototype.inviteURL=function(){
+      if(!this.onlineRoomId||!/^https?:$/.test(location.protocol)||/^(localhost|127\.|0\.0\.0\.0|\[::1\]|192\.168\.|10\.)/.test(location.hostname))return null;
+      const u=new URL(location.href);u.search='';u.hash='';u.searchParams.set('room',this.onlineRoomId);return u.href;
+    };
+    BingoApp.prototype.shareInvite=async function(channel){
+      const url=this.inviteURL();if(!url){this.showToast('Open the published game to share an invite link.');return;}
+      const text=`Your BINGO seat is waiting. Join my KLAAYO room ${this.onlineRoomId}: ${url}`;
+      if(channel==='whatsapp'){window.open('https://wa.me/?text='+encodeURIComponent(text),'_blank','noopener,noreferrer');return;}
+      try{if(navigator.share){await navigator.share({title:'KLAAYO BINGO',text,url});return;}
+        await navigator.clipboard.writeText(url);this.showToast('Invite link copied.');
+      }catch(e){if(e.name!=='AbortError')window.prompt('Copy this invite link:',url);}
+    };
+    BingoApp.prototype.shareResult=async function(){
+      if(!this.isGameOver)return;
+      const c=document.createElement('canvas');c.width=1080;c.height=1080;const x=c.getContext('2d');
+      x.fillStyle='#f7f4ee';x.fillRect(0,0,1080,1080);x.strokeStyle='#b09a6c';x.lineWidth=2;x.strokeRect(36,36,1008,1008);
+      x.fillStyle='#652e42';x.fillRect(36,830,1008,214);x.textAlign='center';x.fillStyle='#292725';
+      x.font='48px Georgia';x.fillText('K L A A Y O',540,165);x.font='italic 32px Georgia';x.fillText('Simply Beautiful.',540,216);
+      x.font='bold 94px Georgia';x.fillStyle='#652e42';x.fillText('BINGO',540,405);
+      const mine=this.players[this.myPlayerIndex],won=this.winners?.some(p=>p.id===mine?.id);
+      x.font='40px Georgia';x.fillText(won?(this.winners.length>1?'A shared victory.':'A little victory. Beautifully played.'):'A good game. Another round?',540,525,920);
+      x.font='30px sans-serif';x.fillStyle='#716963';x.fillText(`${this.gridSize} × ${this.gridSize} · ${this.pickedNumbers.length} calls`,540,600);
+      x.fillText(this.dailyDate?'Daily challenge · '+this.dailyDate:'Play with KLAAYO. Bring a friend.',540,660);
+      x.fillStyle='#fffcf7';x.font='32px Georgia';x.fillText('Your next BINGO is waiting.',540,920);x.font='24px sans-serif';x.fillText('klaayo.com',540,980);
+      const blob=await new Promise(resolve=>c.toBlob(resolve,'image/png'));if(!blob){this.showToast('Could not create the result image.');return;}
+      const file=new File([blob],'klaayo-bingo-result.png',{type:'image/png'});
+      try{if(navigator.canShare?.({files:[file]})){await navigator.share({files:[file],title:'KLAAYO BINGO'});return;}}catch(e){if(e.name==='AbortError')return;}
+      const a=document.createElement('a'),url=URL.createObjectURL(blob);a.href=url;a.download=file.name;a.click();setTimeout(()=>URL.revokeObjectURL(url),30000);
+    };
+    // Keep enhancements at explicit lifecycle boundaries, including reconnects and resumes.
+
+    const baseStart=BingoApp.prototype.startBattleArena;
+    BingoApp.prototype.startBattleArena=function(...args){this.runId=crypto.randomUUID();const out=baseStart.apply(this,args);this.renderExtras();return out;};
+    const baseSave=BingoApp.prototype.saveGame;
+    BingoApp.prototype.saveGame=function(){baseSave.call(this);try{const d=JSON.parse(localStorage.getItem('klaayo-bingo-save-v1'));if(d&&this.mode==='ai'&&!this.isGameOver){d.dailyPractice=!!this.dailyPractice;localStorage.setItem('klaayo-bingo-save-v1',JSON.stringify(d));}}catch{}};
+    const baseResume=BingoApp.prototype.resumeSavedGame;
+    BingoApp.prototype.resumeSavedGame=function(){try{this.dailyPractice=!!JSON.parse(localStorage.getItem('klaayo-bingo-save-v1'))?.dailyPractice;}catch{this.dailyPractice=false;}baseResume.call(this);this.renderExtras();};
+    const baseAgain=BingoApp.prototype.playAgain;
+    BingoApp.prototype.playAgain=function(){if(this.mode==='ai'&&this.dailyDate){this.closeModal('modal-victory');return this.startDaily();}return baseAgain.call(this);};
+    const baseView=BingoApp.prototype.showView;
+    BingoApp.prototype.showView=function(v){baseView.call(this,v);if(v==='menu')this.refreshDaily();};
+    const baseRender=BingoApp.prototype.renderBattleBoard;
+    BingoApp.prototype.renderBattleBoard=function(){baseRender.call(this);this.renderExtras();};
+    const baseSync=BingoApp.prototype.syncRoomState;
+    BingoApp.prototype.syncRoomState=function(data){baseSync.call(this,data);this.renderExtras();};
+    const baseVictory=BingoApp.prototype.triggerVictory;
+    BingoApp.prototype.triggerVictory=function(result){
+      baseVictory.call(this,result);this.renderExtras();
+      if(this.mode!=='online'&&this.dailyPractice)return;
+      const mine=this.players[this.myPlayerIndex],win=this.winners.some(p=>p.id===mine?.id),d=BingoExtras.read();
+      const id=this.mode==='online'?`${this.currentRoomData.id}:${this.currentRoomData.roundNumber}:${mine?.id}`:this.dailyDate?'daily:'+this.dailyDate:this.runId;
+      if(BingoExtras.record(d,{id,win,shared:this.winners.length>1&&win,calls:this.pickedNumbers.length,size:this.gridSize,online:this.mode==='online',daily:this.mode==='ai'?this.dailyDate:null,date:BingoExtras.today()})){
+        if(!BingoExtras.write(d))this.showToast('Progress could not be saved in this browser.');
+      }
+      this.refreshDaily();
+    };
+
     const appInstance = new BingoApp();
     window.app = appInstance;
+    appInstance.initExtras();
   </script>
 </body>
 </html>
