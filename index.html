@@ -323,6 +323,7 @@
 .progress-stats strong{display:block;font:600 24px Georgia,serif;color:#652e42}.progress-stats span{font-size:11px;color:#716963}.progress-badges{display:flex;flex-wrap:wrap;gap:8px}.badge{padding:8px 10px;border:1px solid #ded4c5;border-radius:20px;color:#716963;font-size:12px}.badge.earned{background:#eadfc9;border-color:#967947;color:#59421c}
 @media(max-width:420px){.extras-home{grid-template-columns:1fr}.music-toggle{padding:7px;min-width:40px}.progress-stats{grid-template-columns:repeat(2,1fr)}}
 @media(prefers-reduced-motion:reduce){.scribble-anim,.cell-last-struck{animation:none!important}}
+</style><style>.extras-home{display:block;margin:0!important}.extras-home .daily-card{width:100%;padding:18px}.weekly-panel{padding:18px;border:1px solid #ded4c5;border-radius:20px;background:#fffcf7}.weekly-heading{display:flex;justify-content:space-between;align-items:center;gap:10px}.weekly-panel h3{font:600 24px Georgia,serif;color:#652e42}.weekly-help{display:block;font-size:11px;line-height:1.6;color:#716963;margin:8px 0}.weekly-rules{font-size:12px;color:#716963;margin-top:14px;line-height:1.7}.weekly-rules summary{cursor:pointer;color:#652e42}#weekly-entries{margin:12px 0;padding:0;list-style:none}#weekly-entries li{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #eee2dd;font-size:13px}#weekly-entries li span:first-child{color:#967947;min-width:20px}#weekly-entries li span:nth-child(2){flex:1;overflow-wrap:anywhere}#weekly-entries strong{color:#652e42;white-space:nowrap}.home-share{text-align:center}.share-icons{display:flex;flex-wrap:wrap;justify-content:center;gap:7px;margin:14px 0}.social-share{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;min-width:54px;min-height:56px;border:1px solid #ded4c5;border-radius:12px;background:#fffcf7;color:#652e42;padding:8px!important;font-size:9px!important;cursor:pointer}.social-share svg{width:21px;height:21px;fill:currentColor}.social-share:hover{background:#eee2dd}.social-share.whatsapp{color:#246347}.social-share.facebook,.social-share.linkedin{color:#275780}.social-share.instagram{color:#863d64}.link-icon{font-size:23px;line-height:21px}.explore-klaayo{display:inline-block;background:#652e42;color:#fffcf7;padding:11px 22px;border-radius:12px;margin:8px 0;font-size:13px}.tag-message{font-size:12px;color:#652e42;line-height:1.6;text-align:center}.share-result-heading{font:600 19px Georgia,serif;color:#652e42}#challenge-score-section{text-align:left;border-bottom:1px solid #ded4c5;padding:10px 0 15px;margin-bottom:15px}#challenge-score-section[hidden],#challenge-score-form[hidden]{display:none!important}#challenge-score-title{font:600 25px Georgia,serif;color:#652e42;margin-bottom:12px}#challenge-score-form label{display:block;font-size:12px;font-weight:700;color:#652e42;margin:8px 0 4px}#challenge-score-form input{width:100%;background:#fff;border:1px solid #cdbdad;padding:11px;border-radius:10px;color:#292725;font-size:16px}#score-email-help,#score-status{font-size:11px;line-height:1.6;margin:7px 0;color:#716963}.score-submit{background:#652e42;color:#fffcf7}.score-submit:hover{background:#4b2031}#view-menu>div:has(>span:first-child+span+a){display:none}#modal-victory>div{max-height:88dvh}#victory-treat[hidden]{display:none!important}
 </style></head>
 <body class="arena-grid-bg min-h-screen flex flex-col justify-between antialiased selection:bg-orange-600 selection:text-[#292725] pb-6">
 
@@ -2979,7 +2980,7 @@
       const mine=this.players[this.myPlayerIndex],won=this.winners?.some(p=>p.id===mine?.id);
       x.font='40px Georgia';x.fillText(won?(this.winners.length>1?'A shared victory.':'A little victory. Beautifully played.'):'A good game. Another round?',540,525,920);
       x.font='30px sans-serif';x.fillStyle='#716963';x.fillText(`${this.gridSize} × ${this.gridSize} · ${this.pickedNumbers.length} calls`,540,600);
-      x.fillText(this.dailyDate?'Daily challenge · '+this.dailyDate:'Play with KLAAYO. Bring a friend.',540,660);
+      x.fillText(this.weeklyActive?'Weekly Challenge · '+(this.weeklyResult?.score||0)+' points':'Play with KLAAYO. Bring a friend.',540,660);
       x.fillStyle='#fffcf7';x.font='32px Georgia';x.fillText('Your next BINGO is waiting.',540,920);x.font='24px sans-serif';x.fillText('klaayo.com',540,980);
       const blob=await new Promise(resolve=>c.toBlob(resolve,'image/png'));if(!blob){this.showToast('Could not create the result image.');return;}
       const file=new File([blob],'klaayo-bingo-result.png',{type:'image/png'});
@@ -3012,6 +3013,115 @@
         if(!BingoExtras.write(d))this.showToast('Progress could not be saved in this browser.');
       }
       this.refreshDaily();
+    };
+
+    // Weekly challenge uses server-owned cards, moves and scores; no account form.
+    const SHARE_ICONS={
+      whatsapp:'<path d="M20.5 11.8a8.5 8.5 0 0 1-12.6 7.5L3 21l1.7-4.8A8.5 8.5 0 1 1 20.5 11.8Z" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M8 7c-2 3 3 8 6 8l2-2-3-1-1 1-3-3 1-1-2-2Z"/>',
+      facebook:'<path d="M14 22v-9h3l.5-4H14V7c0-1 .3-2 2-2h2V1h-3c-4 0-5 2-5 6v2H7v4h3v9Z"/>',
+      instagram:'<rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1.3"/>',
+      linkedin:'<path d="M3 9h4v12H3zm2-7a2.3 2.3 0 1 0 0 4.6A2.3 2.3 0 0 0 5 2Zm5 7h4v1.7c1-1.5 2-2 3.5-2 3 0 4.5 2 4.5 5V21h-4v-6c0-2-.5-3-2-3s-2 1-2 3v6h-4Z"/>'
+    };
+    const socialMarkup=scope=>`<div class="share-icons">${Object.entries(SHARE_ICONS).map(([key,svg])=>`<button type="button" class="social-share ${key}" onclick="app.shareGame('${key}','${scope}')" aria-label="Share via ${key}" title="${key==='instagram'?'Share or download image for Instagram':key}"><svg viewBox="0 0 24 24" aria-hidden="true">${svg}</svg><span>${({whatsapp:'WhatsApp',facebook:'Facebook',instagram:'Instagram',linkedin:'LinkedIn'})[key]}</span></button>`).join('')}<button type="button" class="social-share" onclick="app.shareGame('copy','${scope}')"><span class="link-icon" aria-hidden="true">↗</span><span>Copy link</span></button></div>`;
+    const weeklyInit=BingoApp.prototype.initExtras;
+    BingoApp.prototype.initExtras=function(){
+      weeklyInit.call(this);
+      const extra=document.querySelector('.extras-home');extra.innerHTML='<button id="weekly-start" class="daily-card" onclick="app.startWeekly()"><span class="eyebrow">This week’s challenge</span><strong>Weekly Challenge ↗</strong><small>5 × 5 · Beat our Expert bot · Top 10 worldwide</small></button>';
+      const regular=document.querySelector('[onclick="app.startConfigPrompt(\'ai\')"]');regular.parentElement.prepend(extra);
+      document.querySelector('#view-menu h2').textContent='A little play. A little KLAAYO.';
+      document.querySelector('#view-menu h2+p').textContent='Choose your game. Five lines to BINGO.';
+      const board=document.createElement('section');board.id='weekly-board';board.className='weekly-panel';board.innerHTML='<div class="weekly-heading"><h3>This Week’s Top 10</h3><button type="button" class="extra-button" onclick="app.loadWeeklyTop()">Refresh</button></div><p class="weekly-help">Worldwide entries · Best score per email · Resets Monday (IST)</p><ol id="weekly-entries"><li>Loading this week’s scores…</li></ol><details class="weekly-rules"><summary>How points work</summary><p>10 points per completed line (up to 50). Win alone: +50, plus 2 for every number left uncalled. Shared win: +25. Lose: your completed-line points still count. Only challenge scores enter this list. Equal scores: fewer calls, then earlier submission. Replays are allowed; only your best entry counts.</p></details>';
+      document.getElementById('view-menu').append(board);
+      const homeShare=document.createElement('section');homeShare.className='weekly-panel home-share';homeShare.innerHTML='<h3>Share the game</h3>'+socialMarkup('home')+'<a class="explore-klaayo" href="https://klaayo.com" target="_blank" rel="noopener noreferrer">Explore KLAAYO ↗</a>';board.after(homeShare);
+      const result=document.querySelector('.victory-extras');result.innerHTML=`<p id="victory-extra-status" class="enhance-note"></p><section id="challenge-score-section" hidden><h3 id="challenge-score-title">Your score</h3><form id="challenge-score-form" onsubmit="app.submitWeeklyScore(event)"><label for="score-name">Display name</label><input id="score-name" name="name" required maxlength="24" autocomplete="nickname" placeholder="How should we call you?"><label for="score-email">Email address</label><input id="score-email" name="email" type="email" required maxlength="254" autocomplete="email" placeholder="you@example.com" aria-describedby="score-email-help"><p id="score-email-help">No spam. Your email stays private and is used only for your entry and, if selected, coupon contact.</p><p class="weekly-help">Your name and score will be public if you reach the Top 10. Other entries are not retained.</p><div class="extras-row"><button id="score-submit" class="extra-button score-submit" type="submit">Submit your score</button><button class="extra-button" type="button" onclick="app.skipWeeklyScore()">Skip</button></div></form><p id="score-status" role="status" aria-live="polite"></p></section><h3 class="share-result-heading">Share your BINGO moment</h3>${socialMarkup('result')}<p class="tag-message">Don’t forget to tag <strong>@klaayo</strong> in your posts and stories! Lucky participants selected by KLAAYO may receive discount coupons, sent personally by message or email.</p><small class="weekly-help">Sharing does not guarantee a coupon. Score submission is optional.</small>`;
+      document.getElementById('victory-treat').hidden=true;
+      // An ordinary link never exposes a player's room code or personal data.
+      this.loadWeeklyTop();
+    };
+    BingoApp.prototype.weeklyRPC=async function(action,id=null,data={}){
+      const client=await initCloudService();
+      const reply=await client.rpc('bingo_challenge',{p_action:action,p_run:id,p_data:data});
+      if(reply.error)throw new Error(reply.error.code==='PGRST202'?'Weekly Challenge needs its one-time database setup.':'Could not connect. Please try again.');
+      if(reply.data?.error){const errors={RATE_LIMITED:'Please wait a minute before trying again.',RUN_UNAVAILABLE:'This challenge expired. Start a new one.',ALREADY_SUBMITTED:'This result has already been submitted.',INVALID_DETAILS:'Enter a name (1–24 characters) and a valid email.',STALE_MOVE:'Refreshing your latest move…',NO_SCORE:'There is no eligible score to submit.'};throw new Error(errors[reply.data.error]||'Could not complete that action. Please try again.');}
+      return reply.data;
+    };
+    BingoApp.prototype.loadWeeklyTop=async function(){
+      if(this.topLoading)return;this.topLoading=true;
+      const list=document.getElementById('weekly-entries');
+      try{const d=await this.weeklyRPC('leaderboard');list.textContent='';
+        for(const p of d.entries){const li=document.createElement('li'),rank=document.createElement('span'),name=document.createElement('span'),points=document.createElement('strong');rank.textContent=p.rank;name.textContent=p.name;points.textContent=p.score+' pts';li.append(rank,name,points);list.append(li);}
+        if(!d.entries.length){const li=document.createElement('li');li.textContent='A fresh week. Your name could be here.';list.append(li);}
+      }catch(e){list.textContent=e.message;}finally{this.topLoading=false;}
+    };
+    BingoApp.prototype.startWeekly=async function(){
+      if(this.weeklyBusy)return;
+      if(this.readSavedGame()&&!window.confirm('Start the Weekly Challenge? Your regular saved match will stay available.'))return;
+      const button=document.getElementById('weekly-start');button.disabled=true;this.weeklyBusy=true;
+      try{const d=await this.weeklyRPC('start');this.cancelBotMove();clearTimeout(this.victoryTimer);
+        this.dailyDate=null;this.dailyPractice=false;this.weeklyActive=true;this.weeklyResult=null;this.weeklyFinished=null;
+        this.mode='ai';this.gridSize=5;this.playerCount=2;this.aiDifficulty='expert';this.myPlayerIndex=0;this.currentTurnIndex=0;this.isGameOver=false;this.winners=[];
+        this.closeModal('modal-victory');this.closeModal('modal-inspect-board');this.showView('game');this.applyWeekly(d);
+      }catch(e){this.showToast(e.message,'error');}finally{this.weeklyBusy=false;button.disabled=false;if(this.weeklyActive)this.updateTurnUI();}
+    };
+    BingoApp.prototype.applyWeekly=function(d){
+      this.weeklyResult=d;
+      this.players=[{id:'human',name:'You',color:'#865166',isAI:false,grid:d.board},{id:'bot_1',name:'KLAAYO Expert',color:'#486e65',isAI:true,grid:d.botBoard}];
+      this.pickedNumbers=d.calls;this.pickedByMap={};
+      d.calls.forEach((n,i)=>{const j=d.callers[i],p=this.players[j];this.pickedByMap[n]={playerIdx:j,name:p.name,color:p.color,isMe:j===0};});
+      this.lastStruckNumber=d.calls.at(-1)??null;this.currentTurnIndex=0;this.isGameOver=d.finished;
+      this.resetMatchLabels();this.renderBattleBoard();this.renderHistoryList();this.updateTurnUI();
+      if(d.finished&&this.weeklyFinished!==d.id){this.weeklyFinished=d.id;this.triggerVictory(d.winner===3?this.players:[this.players[d.winner===1?0:1]]);}
+      this.renderExtras();
+    };
+    const normalPick=BingoApp.prototype.handleNumberPick;
+    BingoApp.prototype.handleNumberPick=async function(n){
+      if(!this.weeklyActive)return normalPick.call(this,n);
+      if(this.weeklyBusy||this.isGameOver||this.exitPromptOpen||this.currentView!=='game'||this.pickedNumbers.includes(n))return;
+      this.weeklyBusy=true;this.updateTurnUI();const id=this.weeklyResult.id;
+      try{const d=await this.weeklyRPC('move',id,{number:n,moveNumber:this.pickedNumbers.length+1});if(this.weeklyActive&&this.weeklyResult?.id===id){this.applyWeekly(d);sound.playStrike();}}
+      catch(e){this.showToast(e.message,'error');try{const d=await this.weeklyRPC('state',id);if(this.weeklyActive&&this.weeklyResult?.id===id)this.applyWeekly(d);}catch{}}
+      finally{this.weeklyBusy=false;this.updateTurnUI();}
+    };
+    const normalBot=BingoApp.prototype.checkAIMoveTrigger;
+    BingoApp.prototype.checkAIMoveTrigger=function(){if(!this.weeklyActive)return normalBot.call(this);};
+    const normalTurn=BingoApp.prototype.updateTurnUI;
+    BingoApp.prototype.updateTurnUI=function(){normalTurn.call(this);if(this.weeklyActive&&this.weeklyBusy){document.querySelectorAll('#battle-grid button').forEach(b=>b.disabled=true);document.getElementById('turn-text').textContent='KLAAYO is thinking…';}};
+    const normalExtras=BingoApp.prototype.renderExtras;
+    BingoApp.prototype.renderExtras=function(){normalExtras.call(this);if(this.weeklyActive){for(const id of ['match-extra-status','victory-extra-status']){const e=document.getElementById(id);if(e)e.textContent='Weekly Challenge · Expert · Week of '+(this.weeklyResult?.week||'');}}};
+    const normalVictory=BingoApp.prototype.triggerVictory;
+    BingoApp.prototype.triggerVictory=function(result){
+      if(this.weeklyActive){baseVictory.call(this,result);this.renderExtras();}else normalVictory.call(this,result);
+      const section=document.getElementById('challenge-score-section'),form=document.getElementById('challenge-score-form');
+      section.hidden=!(this.weeklyActive&&this.weeklyResult?.score>0);form.hidden=false;form.reset();document.getElementById('score-submit').disabled=false;document.getElementById('score-status').textContent='';
+      if(this.weeklyActive){document.getElementById('challenge-score-title').textContent=`Your score: ${this.weeklyResult.score} points`;
+        if(this.weeklyResult.submitted){form.hidden=true;document.getElementById('score-status').textContent='This result has already been submitted.';}
+      }
+    };
+    BingoApp.prototype.skipWeeklyScore=function(){document.getElementById('challenge-score-form').hidden=true;document.getElementById('score-status').textContent='No problem. You can still share your game.';};
+    BingoApp.prototype.submitWeeklyScore=async function(event){
+      event.preventDefault();const form=document.getElementById('challenge-score-form');if(!form.reportValidity()||this.scoreBusy||!this.weeklyActive||!this.weeklyResult?.finished)return;
+      const id=this.weeklyResult.id,status=document.getElementById('score-status'),button=document.getElementById('score-submit');this.scoreBusy=true;button.disabled=true;status.textContent='Submitting…';
+      try{const d=await this.weeklyRPC('submit',id,{name:document.getElementById('score-name').value.trim(),email:document.getElementById('score-email').value.trim()});
+        if(this.weeklyResult?.id===id){this.weeklyResult.submitted=true;form.hidden=true;form.reset();status.textContent=d.retained?`You’re in this week’s Top 10! Position: ${d.rank}.`:`You scored ${d.score}. You haven’t reached this week’s Top 10 yet. Your name and email were not retained.`;}this.loadWeeklyTop();
+      }catch(e){status.textContent=e.message;}finally{this.scoreBusy=false;button.disabled=false;}
+    };
+    const normalSave=BingoApp.prototype.saveGame,normalClear=BingoApp.prototype.clearSavedGame;
+    BingoApp.prototype.saveGame=function(){if(!this.weeklyActive)return normalSave.call(this);};
+    BingoApp.prototype.clearSavedGame=function(){if(!this.weeklyActive)return normalClear.call(this);};
+    const normalAgain=BingoApp.prototype.playAgain;
+    BingoApp.prototype.playAgain=function(){if(this.weeklyActive){this.closeModal('modal-victory');return this.startWeekly();}return normalAgain.call(this);};
+    for(const method of ['quickPlay','startConfigPrompt','resumeSavedGame','showOnlineSetup']){const original=BingoApp.prototype[method];BingoApp.prototype[method]=function(...args){if(this.weeklyBusy)return;this.weeklyActive=false;return original.apply(this,args);};}
+    BingoApp.prototype.publicGameURL=function(){const u=new URL(location.href);u.search='';u.hash='';return /^https?:$/.test(u.protocol)&&!['localhost','127.0.0.1','[::1]'].includes(u.hostname)?u.href:null;};
+    BingoApp.prototype.shareGame=async function(platform,scope){
+      const url=this.publicGameURL();if(!url){this.showToast('Open the published game to share its link.');return;}
+      const text=scope==='result'&&this.weeklyActive&&this.weeklyResult?.finished?`I scored ${this.weeklyResult.score} in KLAAYO’s Weekly BINGO Challenge! Can you beat it? @klaayo`:'A little play. A little KLAAYO. Join me for BINGO! @klaayo';
+      const destinations={whatsapp:'https://wa.me/?text='+encodeURIComponent(text+' '+url),facebook:'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(url),linkedin:'https://www.linkedin.com/sharing/share-offsite/?url='+encodeURIComponent(url)};
+      if(destinations[platform]){window.open(destinations[platform],'_blank','noopener,noreferrer');return;}
+      if(platform==='instagram'){
+        if(scope==='result'&&this.isGameOver){this.showToast('Choose Instagram if offered, or upload the downloaded result to your story. Tag @klaayo.');await this.shareResult();}
+        else{try{if(navigator.share){await navigator.share({title:'KLAAYO BINGO',text,url});return;}await navigator.clipboard.writeText(text+' '+url);this.showToast('Link copied. Paste it in your Instagram story link sticker or message.');}catch(e){if(e.name!=='AbortError')window.prompt('Copy for Instagram:',text+' '+url);}}return;
+      }
+      try{await navigator.clipboard.writeText(url);this.showToast('Game link copied.');}catch{window.prompt('Copy game link:',url);}
     };
 
     const appInstance = new BingoApp();
